@@ -234,8 +234,8 @@ body {
   left: 0;
   background-image: url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1600&q=80');
   background-size: cover;
-  background-position: center;
-  opacity: 0.08;
+  background-position: center right;
+  opacity: 0.32;
   pointer-events: none;
   z-index: 0;
 }
@@ -247,8 +247,8 @@ body {
   right: 0;
   bottom: 0;
   left: 0;
-  background: linear-gradient(135deg, rgba(11, 15, 25, 0.8) 0%, rgba(11, 15, 25, 0.35) 50%, rgba(11, 15, 25, 0.75) 100%),
-              linear-gradient(to bottom, transparent 40%, var(--bg-color) 100%);
+  background: linear-gradient(90deg, var(--bg-color) 0%, rgba(11, 15, 25, 0.7) 40%, rgba(11, 15, 25, 0.25) 100%),
+              linear-gradient(to bottom, transparent 60%, var(--bg-color) 100%);
   pointer-events: none;
 }
 
