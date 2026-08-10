@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoValue AI - Used Car Price Predictor</title>
+  <meta name="description" content="Get instant estimated used car resale values using vehicle parameters and simulated machine learning models." />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+  
+  <!-- Chart.js CDN for Model Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+  <!-- Sticky Header Navigation -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">🚗</div>
+        <div class="logo-text">AutoValue <span>AI</span></div>
+      </a>
+
+      <nav class="nav-desktop">
+        <a href="#predict" class="nav-link">Predict Price</a>
+        <a href="#comparison" class="nav-link">Saved Comparisons</a>
+        <a href="#dataset" class="nav-link">Dataset Explorer</a>
+        <a href="#model" class="nav-link">Model Performance</a>
+        <a href="#about" class="nav-link">About Project</a>
+      </nav>
+
+      <div class="header-controls">
+        <button id="themeToggleBtn" class="btn-theme" type="button" aria-label="Toggle Theme">
+          <span id="themeIcon">🌙</span>
+          <span id="themeText">Dark Mode</span>
+        </button>
+
+        <button id="navToggle" class="nav-toggle" type="button" aria-label="Toggle Mobile Navigation">
+          ☰
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Nav -->
+    <div id="mobileNav" class="mobile-nav hidden">
+      <a href="#predict" class="nav-link">Predict Price</a>
+      <a href="#comparison" class="nav-link">Saved Comparisons</a>
+      <a href="#dataset" class="nav-link">Dataset Explorer</a>
+      <a href="#model" class="nav-link">Model Performance</a>
+      <a href="#about" class="nav-link">About Project</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="hero-bg-car"></div>
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="badge badge-primary">
+          ⚡ Demo powered by mock data
+        </div>
+        <h1 class="hero-title">
+          Know Your Car's <span>True Resale Value</span>
+        </h1>
+        <p class="hero-subtitle">
+          Get a quick estimated resale price using vehicle details and simulated machine learning insights.
+        </p>
+        <div class="hero-buttons">
+          <a href="#predict" class="btn btn-primary">
+            🚀 Predict My Car's Value
+          </a>
+          <a href="#dataset" class="btn btn-secondary">
+            📊 Explore Dataset
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="car-graphic-container">
+          <div class="car-graphic-glow"></div>
+          <svg class="car-svg-visual" viewBox="0 0 500 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="220" width="460" height="8" rx="4" fill="var(--border-color)"/>
+            <path d="M70 190 C 70 140, 120 100, 180 90 L 260 50 C 290 40, 360 40, 400 80 L 440 120 C 460 140, 470 160, 470 190 Z" fill="url(#carGradient)" />
+            <path d="M190 92 L 260 55 C 285 46, 345 46, 380 82 L 400 110 L 190 110 Z" fill="var(--bg-color)" opacity="0.75" />
+            <circle cx="130" cy="190" r="38" fill="#1e293b" stroke="var(--accent-blue)" stroke-width="6"/>
+            <circle cx="130" cy="190" r="18" fill="var(--border-color)"/>
+            <circle cx="370" cy="190" r="38" fill="#1e293b" stroke="var(--accent-blue)" stroke-width="6"/>
+            <circle cx="370" cy="190" r="18" fill="var(--border-color)"/>
+            <path d="M430 145 H460 V160 H425 Z" fill="#f59e0b" />
+            <defs>
+              <linearGradient id="carGradient" x1="70" y1="50" x2="470" y2="190" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#3b82f6"/>
+                <stop offset="1" stop-color="#1d4ed8"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Prediction Form Section -->
+  <section id="predict" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Vehicle Resale Valuation</h2>
+        <p class="section-desc">Enter vehicle specifications below to compute an algorithmic market estimate.</p>
+      </div>
+
+      <div class="predictor-card">
+        <form id="predictionForm" novalidate>
+          <div class="form-grid">
+            
+            <!-- Brand -->
+            <div class="form-group">
+              <label for="brandSelect" class="form-label">Brand <span class="required">*</span></label>
+              <select id="brandSelect" class="form-control" required>
+                <option value="">Select Brand *</option>
+              </select>
+              <span id="brandSelectError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Model -->
+            <div class="form-group">
+              <label for="modelSelect" class="form-label">Model <span class="required">*</span></label>
+              <select id="modelSelect" class="form-control" disabled required>
+                <option value="">Select Model *</option>
+              </select>
+              <span id="modelSelectError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Year -->
+            <div class="form-group">
+              <label for="yearInput" class="form-label">Manufacturing Year <span class="required">*</span></label>
+              <input type="number" id="yearInput" class="form-control" placeholder="e.g. 2019" min="1980" max="2026" required />
+              <span id="yearInputError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Kilometres Driven -->
+            <div class="form-group">
+              <label for="kmInput" class="form-label">Kilometres Driven <span class="required">*</span></label>
+              <input type="number" id="kmInput" class="form-control" placeholder="e.g. 45000" min="0" required />
+              <span id="kmInputError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Fuel Type -->
+            <div class="form-group">
+              <label for="fuelSelect" class="form-label">Fuel Type <span class="required">*</span></label>
+              <select id="fuelSelect" class="form-control" required>
+                <option value="">Select Fuel Type *</option>
+              </select>
+              <span id="fuelSelectError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Transmission -->
+            <div class="form-group">
+              <label for="transmissionSelect" class="form-label">Transmission <span class="required">*</span></label>
+              <select id="transmissionSelect" class="form-control" required>
+                <option value="">Select Transmission *</option>
+              </select>
+              <span id="transmissionSelectError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Owner Count -->
+            <div class="form-group">
+              <label for="ownerInput" class="form-label">Previous Owners (Optional)</label>
+              <input type="number" id="ownerInput" class="form-control" placeholder="e.g. 1" min="0" max="10" />
+              <span id="ownerInputError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Seller Type -->
+            <div class="form-group">
+              <label for="sellerSelect" class="form-label">Seller Type (Optional)</label>
+              <select id="sellerSelect" class="form-control">
+                <option value="Individual">Individual</option>
+                <option value="Dealer">Dealer</option>
+                <option value="Trustmark Dealer">Trustmark Dealer</option>
+              </select>
+            </div>
+
+            <!-- Engine Capacity -->
+            <div class="form-group">
+              <label for="engineInput" class="form-label">Engine Capacity CC (Optional)</label>
+              <input type="number" id="engineInput" class="form-control" placeholder="e.g. 1197" min="1" />
+              <span id="engineInputError" class="error-message hidden"></span>
+            </div>
+
+            <!-- Mileage -->
+            <div class="form-group">
+              <label for="mileageInput" class="form-label">Mileage km/l (Optional)</label>
+              <input type="number" step="0.1" id="mileageInput" class="form-control" placeholder="e.g. 20.4" min="0.1" />
+              <span id="mileageInputError" class="error-message hidden"></span>
+            </div>
+
+            <!-- City -->
+            <div class="form-group">
+              <label for="citySelect" class="form-label">City Location (Optional)</label>
+              <select id="citySelect" class="form-control">
+                <option value="">Select City</option>
+              </select>
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+            <button type="button" id="resetFormBtn" class="btn btn-secondary">
+              🔄 Reset Form
+            </button>
+            <button type="submit" class="btn btn-primary">
+              ⚡ Calculate Price Estimate
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Result Container Card -->
+      <div id="predictionResultCard" class="result-card hidden"></div>
+
+      <!-- Similar Cars Comparison Container -->
+      <div id="similarCarsSection" class="similar-section hidden">
+        <div id="similarCarsContainer"></div>
+      </div>
+
+      <!-- Saved Comparisons & Scenario Matrix Section -->
+      <div id="comparison" class="comparison-section">
+        <div class="section-header">
+          <h2 class="section-title">Saved Car Valuations & Scenario Matrix</h2>
+          <p class="section-desc">Save predictions to compare different car scenarios side-by-side, highlighting price deltas and confidence levels.</p>
+        </div>
+        <div id="comparisonContainer"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dataset Explorer Section -->
+  <section id="dataset" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Dataset Explorer</h2>
+        <p class="section-desc">Search, filter, and inspect mock used car records powering our simulator.</p>
+      </div>
+
+      <!-- Summary Metrics Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-title">Total Records</div>
+          <div id="summaryTotalRecords" class="metric-value">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Average Resale Price</div>
+          <div id="summaryAvgPrice" class="metric-value">₹0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Lowest Price</div>
+          <div id="summaryMinPrice" class="metric-value">₹0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Highest Price</div>
+          <div id="summaryMaxPrice" class="metric-value">₹0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Available Brands</div>
+          <div id="summaryBrandsCount" class="metric-value">0</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-title">Fuel Variants</div>
+          <div id="summaryFuelCount" class="metric-value">0</div>
+        </div>
+      </div>
+
+      <!-- Search and Filter Bar -->
+      <div class="filter-bar">
+        <input type="text" id="datasetSearch" class="form-control" placeholder="🔍 Search brand or model..." />
+        <select id="filterFuel" class="form-control"><option value="">All Fuels</option></select>
+        <select id="filterTransmission" class="form-control"><option value="">All Transmissions</option></select>
+        <select id="filterCity" class="form-control"><option value="">All Cities</option></select>
+        <select id="sortSelect" class="form-control">
+          <option value="price-desc">Price: High to Low</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="year-desc">Year: Newest First</option>
+          <option value="year-asc">Year: Oldest First</option>
+        </select>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Make & Model</th>
+              <th>Year</th>
+              <th>KM Driven</th>
+              <th>Fuel</th>
+              <th>Transmission</th>
+              <th>Owners</th>
+              <th>City</th>
+              <th>Resale Price</th>
+            </tr>
+          </thead>
+          <tbody id="datasetTbody"></tbody>
+        </table>
+      </div>
+
+      <div class="text-center py-8">
+        <p id="datasetRecordCount" class="text-muted" style="margin-bottom: 0.8rem;"></p>
+        <button id="loadMoreBtn" class="btn btn-secondary" type="button">
+          Load More Records
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Model Performance Section -->
+  <section id="model" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">Model Performance & Analytics</h2>
+        <p class="section-desc">Comparison of simulated regression algorithms evaluated on mock training datasets.</p>
+      </div>
+
+      <div class="performance-grid">
+        <div class="model-card active-model">
+          <div class="model-header">
+            <h3>Random Forest Simulator</h3>
+            <span class="badge badge-primary">Active Model</span>
+          </div>
+          <p class="text-muted">Ensemble tree algorithm matching multi-feature non-linear vehicle parameters.</p>
+          <div class="model-metrics-list">
+            <div class="metric-row">
+              <span>Mean Absolute Error (MAE)</span>
+              <strong class="text-accent">₹54,300</strong>
+            </div>
+            <div class="metric-row">
+              <span>Root Mean Squared Error (RMSE)</span>
+              <strong class="text-accent">₹79,600</strong>
+            </div>
+            <div class="metric-row">
+              <span>R² Variance Score</span>
+              <strong class="text-accent">0.89 (89%)</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="model-card">
+          <div class="model-header">
+            <h3>Linear Regression Simulator</h3>
+            <span class="badge badge-outline">Baseline Model</span>
+          </div>
+          <p class="text-muted">Standard parametric baseline predicting direct linear trendlines.</p>
+          <div class="model-metrics-list">
+            <div class="metric-row">
+              <span>Mean Absolute Error (MAE)</span>
+              <strong>₹82,500</strong>
+            </div>
+            <div class="metric-row">
+              <span>Root Mean Squared Error (RMSE)</span>
+              <strong>₹118,400</strong>
+            </div>
+            <div class="metric-row">
+              <span>R² Variance Score</span>
+              <strong>0.78 (78%)</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-wrapper" style="margin-top: 2rem;">
+        <canvas id="performanceChart"></canvas>
+      </div>
+
+      <div class="result-disclaimer" style="margin-top: 1.5rem; text-align: center;">
+        ℹ️ <strong>Notice:</strong> These metrics are simulated for demonstration purposes because this version operates on mock data.
+      </div>
+    </div>
+  </section>
+
+  <!-- About Project Section -->
+  <section id="about" class="section">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">About AutoValue AI</h2>
+        <p class="section-desc">Understanding valuation drivers and machine learning integration architecture.</p>
+      </div>
+
+      <div class="about-grid">
+        <div class="about-card">
+          <h3>Why Vehicle Parameters Matter</h3>
+          <ul>
+            <li><strong>Brand & Model:</strong> Establishes market demand tier, spare availability, and brand resale hold rate.</li>
+            <li><strong>Age & Depreciation:</strong> Vehicle values drop steepest in years 1–3, stabilizing after year 5.</li>
+            <li><strong>Kilometres Driven:</strong> Direct reflection of mechanical wear on engine, gearbox, and suspension.</li>
+            <li><strong>Fuel Type & Transmission:</strong> Automatics and high-efficiency fuels command premium pricing in urban markets.</li>
+          </ul>
+        </div>
+
+        <div class="about-card">
+          <h3>Future Machine Learning API Roadmap</h3>
+          <p class="text-muted">Currently, <code>predictCarPrice()</code> calculates results client-side using JavaScript. In production releases, this function can connect seamlessly to a Python FastAPI backend hosting a trained Scikit-Learn model.</p>
+          <div class="code-snippet">
+// Future production API integration snippet
+async function predictCarPriceAPI(formData) {
+  const response = await fetch("https://api.autovalue.ai/predict", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData)
+  });
+  return await response.json();
+}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Loading Animation Overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden">
+    <div class="spinner"></div>
+    <p>Calculating algorithmic valuation based on mock dataset...</p>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p>🚗 <strong>AutoValue AI</strong> — Used Car Price Predictor Demo</p>
+      <p style="font-size: 0.8rem; margin-top: 0.4rem; color: var(--text-muted);">Built with Vanilla HTML, CSS & JavaScript. Configured for direct Vercel static deployment.</p>
+    </div>
+  </footer>
+
+  <!-- App Data & Scripts -->
+  <script src="./mock-data.js"></script>
+  <script src="./script.js"></script>
+</body>
+</html>

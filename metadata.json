@@ -1,0 +1,6 @@
+{
+  "name": "AutoValue AI - Used Car Price Predictor",
+  "description": "Estimate used car resale values using simulated machine learning logic and explore dataset insights.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
