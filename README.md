@@ -24,6 +24,7 @@ A modern, responsive, frontend-only web application designed to estimate used ca
 ---
 
 ## 📁 Folder Structure
+
 ```text
 used-car-price-predictor/
 ├── index.html        # Main HTML entry point
