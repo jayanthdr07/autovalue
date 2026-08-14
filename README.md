@@ -7,7 +7,7 @@ A modern, responsive, frontend-only web application designed to estimate used ca
 ## 📌 Project Overview
 **AutoValue AI** provides car buyers and sellers with instant estimated resale prices. The application is built entirely using vanilla HTML5, CSS3, and JavaScript, leveraging a mock dataset of over 40 detailed Indian used car records to simulate a Random Forest regression model.
 
-It runs standalone in any browser without needing a build step or backend server, and is pre-configured for direct static deployment on **Vercel**.
+- It runs standalone in any browser without needing a build step or backend server, and is pre-configured for direct static deployment on **Vercel**.
 
 ---
 
